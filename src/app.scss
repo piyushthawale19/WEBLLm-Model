@@ -14,13 +14,28 @@ main {
     .messages {
       height: 100%;
       width: 70%;
+      max-width: 75%;
       display: flex;
       flex-direction: column;
       gap: 0.4em;
       padding: 0.5em;
-      padding-bottom: 4rem;
-      max-width: 75%;
+      padding-bottom: 5rem; // space so input doesn't cover messages
       overflow-y: auto;
+
+      /* Custom scrollbar */
+      scrollbar-width: thin;
+      scrollbar-color: #555 #2d2d2d;
+
+      &::-webkit-scrollbar {
+        width: 10px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: #555;
+        border-radius: 5px;
+      }
+      &::-webkit-scrollbar-track {
+        background-color: #2d2d2d;
+      }
 
       .message {
         width: fit-content;
@@ -28,18 +43,27 @@ main {
         padding: 0.6em 1em;
         border-radius: 0.5em;
         word-wrap: break-word;
-      }
+        transition: background-color 0.2s ease;
 
-      .message.assistant {
-        align-self: flex-start;
-        background-color: #4a4a4a;
-        color: #e7e0c5;
-      }
+        &.assistant {
+          align-self: flex-start;
+          background-color: #4a4a4a;
+          color: #e7e0c5;
 
-      .message.user {
-        align-self: flex-end;
-        background-color: #0078ff;
-        color: #fff;
+          &:hover {
+            background-color: #5a5a5a;
+          }
+        }
+
+        &.user {
+          align-self: flex-end;
+          background-color: #0078ff;
+          color: #fff;
+
+          &:hover {
+            background-color: #005fcc;
+          }
+        }
       }
     }
 
@@ -48,29 +72,29 @@ main {
       position: fixed;
       left: 50%;
       transform: translateX(-50%);
+      bottom: 1rem;
+      display: flex;
       background-color: #3c3c3c;
       border: 1px solid #3c3c3c;
       border-radius: 0.5em;
-      bottom: 1rem;
-      display: flex;
 
       input {
         width: 80%;
         padding: 0.5em 0.7em;
         outline: none;
         border-radius: 0.5rem;
-        background-color: transparent;
         border: none;
-        color: rgb(225, 213, 213);
+        background-color: transparent;
+        color: #e1d5d5;
       }
 
       button {
         width: 20%;
-        border: none;
         padding: 2%;
-        background-color: #1a1919;
-        color: white;
+        border: none;
         border-radius: 0.5rem;
+        background-color: #1a1919;
+        color: #fff;
         cursor: pointer;
         transition: background-color 0.2s ease;
 
@@ -82,7 +106,7 @@ main {
   }
 }
 
-/* ✅ Init Popup (during model init/download) */
+/* ================== Init Popup ================== */
 .init-popup {
   position: fixed;
   top: 10px;
@@ -99,11 +123,11 @@ main {
   transition: all 0.3s ease;
 
   &.success {
-    background: #2ecc71; // ✅ green when connected
+    background: #2ecc71; // green when connected
   }
 }
 
-/* ✅ Loading Popup (while waiting for model response) */
+/* ================== Loading Popup ================== */
 .loading-popup {
   position: fixed;
   top: 0;
@@ -115,6 +139,7 @@ main {
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  background: rgba(0, 0, 0, 0.5); // slightly dark overlay
 
   p {
     color: #fff;
