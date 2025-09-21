@@ -8,7 +8,8 @@ function App() {
     { role: "system", content: "You are a helpful assistant that can help me with my tasks" }
   ])
   const [engine, setEngine] = useState(null)
-  const [loading, setLoading] = useState(true) // ✅ loader state
+  const [loading, setLoading] = useState(true) // ✅ loader for chat responses
+  const [initStatus, setInitStatus] = useState({ message: "Connecting to server...", done: false }) // ✅ new state
   const messagesEndRef = useRef(null)
 
   // ✅ Initialize Model
@@ -16,12 +17,15 @@ function App() {
     const selectedModel = "Llama-3.2-1B-Instruct-q4f32_1-MLC"
 
     webllm.CreateMLCEngine(selectedModel, {
-      initProgressCallback: (initProgress) => {
-        console.log("initProgress", initProgress)
+      initProgressCallback: (progress) => {
+        console.log("initProgress", progress)
+        setInitStatus({ message: progress.text || "Downloading model...", done: false })
       }
     }).then((engine) => {
       setEngine(engine)
-      setLoading(false) // ✅ hide loader after model ready
+      setLoading(false)
+      setInitStatus({ message: "✅ Connected with server", done: true }) // ✅ green success message
+      setTimeout(() => setInitStatus(null), 2500) // auto-hide after 2.5s
     })
 
     return () => {
@@ -46,7 +50,7 @@ function App() {
     const tempMessages = [...messages, { role: "user", content: input }]
     setMessages(tempMessages)
     setInput("")
-    setLoading(true) // ✅ show loader while fetching
+    setLoading(true)
 
     try {
       const reply = await engine.chat.completions.create({
@@ -66,12 +70,20 @@ function App() {
     } catch (err) {
       console.error("Error while chatting:", err)
     } finally {
-      setLoading(false) // ✅ hide loader after response
+      setLoading(false)
     }
   }
 
   return (
     <main>
+      {/* ✅ Init Popup */}
+      {initStatus && (
+        <div className={`init-popup ${initStatus.done ? "success" : ""}`}>
+          <p>{initStatus.message}</p>
+        </div>
+      )}
+
+      {/* ✅ Response Loading Popup */}
       {loading && (
         <div className="loading-popup">
           <div className="dots">

@@ -82,14 +82,34 @@ main {
   }
 }
 
-/* ✅ Loading Popup (blue background + dots animation) */
+/* ✅ Init Popup (during model init/download) */
+.init-popup {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0078ff; // blue while connecting
+  color: #fff;
+  padding: 0.7rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  z-index: 10000;
+  transition: all 0.3s ease;
+
+  &.success {
+    background: #2ecc71; // ✅ green when connected
+  }
+}
+
+/* ✅ Loading Popup (while waiting for model response) */
 .loading-popup {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  // background: rgba(0, 120, 255, 0.4); // transparent blue overlay
   display: flex;
   flex-direction: column;
   justify-content: center;
